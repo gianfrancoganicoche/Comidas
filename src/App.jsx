@@ -1,34 +1,13 @@
 import { useState } from "react";
 
-// BATCH COOKING LOGIC:
-// Saturday: cook dinners for Sunday, Monday, Tuesday (3 meals)
-// Tuesday: cook dinners for Wednesday, Thursday, Friday (3 meals)
-// Saturday dinner: cooked that same night (fresh)
-//
-// Dinner groups chosen so they share oven/stovetop:
-// SAT batch (Sun+Mon+Tue dinners): pollo al horno + batata/brócoli + lentejas (oven + pot)
-// TUE batch (Wed+Thu+Fri dinners): carne picada con pasta + merluza al horno + wok pollo (stovetop + oven)
-// SAT dinner (fresh): bowl atún (no cocción)
-// SUN dinner = SAT batch item 1
-// MON dinner = SAT batch item 2
-// TUE dinner = SAT batch item 3  → and Tuesday they also cook Wed/Thu/Fri batch
-// WED dinner = TUE batch item 1
-// THU dinner = TUE batch item 2
-// FRI dinner = TUE batch item 3
-
-// Remember: lunch[i] = dinner[i-1]
-
 const dinnersByDay = {
-  // Saturday (cooked fresh that night — no cooking needed, just assembly)
-  Sábado:   { emoji: "🥗", name: "Bowl de atún con arroz y vegetales", desc: "2 latas atún al natural (240g), 150g arroz cocido, tomate, cebolla morada, oliva, limón", kcal: 540, p: 54, c: 50, f: 10, batch: null },
-  // SAT batch → eaten Sun/Mon/Tue
-  Domingo:  { emoji: "🍗", name: "Pollo al horno con brócoli", desc: "220g pechuga de pollo, 150g brócoli al vapor con ajo y oliva", kcal: 580, p: 52, c: 18, f: 12, batch: "sábado" },
-  Lunes:    { emoji: "🍲", name: "Lentejas con pollo desmenuzado", desc: "150g lentejas cocidas, 120g pechuga pollo desmenuzada, zanahoria, apio, tomate, especias", kcal: 560, p: 52, c: 48, f: 8, batch: "sábado" },
-  Martes:   { emoji: "🐟", name: "Salmón al horno con batata y zucchini", desc: "200g salmón, 150g batata asada, 150g zucchini salteado con ajo y oliva", kcal: 640, p: 48, c: 44, f: 22, batch: "sábado" },
-  // TUE batch → eaten Wed/Thu/Fri
-  Miércoles:{ emoji: "🥩", name: "Carne picada magra con pasta integral", desc: "180g carne picada 90% magra, 130g pasta integral cocida, tomate natural, cebolla, ajo", kcal: 660, p: 50, c: 56, f: 16, batch: "martes" },
-  Jueves:   { emoji: "🐟", name: "Merluza al horno con papa y ensalada", desc: "250g merluza, 150g papa hervida, lechuga, tomate, aceite de oliva y limón", kcal: 540, p: 52, c: 42, f: 10, batch: "martes" },
-  Viernes:  { emoji: "🍜", name: "Wok de pollo con vegetales y fideos de arroz", desc: "200g pollo, pimiento, cebolla, zanahoria, zucchini, 100g fideos de arroz, salsa de soja", kcal: 580, p: 48, c: 52, f: 10, batch: "martes" },
+  Sábado:    { emoji: "🥗", name: "Bowl de atún con arroz y vegetales", desc: "2 latas atún al natural (240g), 150g arroz cocido, tomate, cebolla morada, oliva, limón", kcal: 540, p: 54, c: 50, f: 10, batch: null },
+  Domingo:   { emoji: "🍗", name: "Pollo al horno con brócoli y boniato", desc: "220g pechuga de pollo, 200g brócoli congelado, 150g boniato en cubos — todo en asadera con oliva y sal, 200°C 25 min", kcal: 590, p: 52, c: 24, f: 12, batch: "sábado" },
+  Lunes:     { emoji: "🍲", name: "Lentejas con pollo y verduras", desc: "150g lentejas cocidas (1 lata), 120g pechuga pollo desmenuzada, 150g mezcla congelada brócoli+coliflor+zanahoria salteada con ajo y oliva", kcal: 560, p: 52, c: 48, f: 8, batch: "sábado" },
+  Martes:    { emoji: "🐟", name: "Salmón al horno con calabaza", desc: "200g salmón, 200g calabaza en cubos asada con oliva y sal — misma asadera, 200°C 25 min", kcal: 620, p: 48, c: 38, f: 22, batch: "sábado" },
+  Miércoles: { emoji: "🥩", name: "Carne picada magra con pasta integral", desc: "180g carne picada 90% magra, 130g pasta integral cocida, tomate natural, cebolla, ajo", kcal: 660, p: 50, c: 56, f: 16, batch: "martes" },
+  Jueves:    { emoji: "🐟", name: "Merluza al horno con boniato y ensalada", desc: "250g merluza, 150g boniato en cubos asado, lechuga, tomate, aceite de oliva y limón", kcal: 550, p: 52, c: 44, f: 10, batch: "martes" },
+  Viernes:   { emoji: "🍜", name: "Wok de pollo con zapallitos y fideos de arroz", desc: "200g pollo, zapallitos en rodajas, pimiento, cebolla, zanahoria, 100g fideos de arroz, salsa de soja", kcal: 580, p: 48, c: 52, f: 10, batch: "martes" },
 };
 
 const breakfasts = {
@@ -87,10 +66,11 @@ const batchDays = {
     meals: [dinnersByDay.Domingo, dinnersByDay.Lunes, dinnersByDay.Martes],
     days: "Domingo · Lunes · Martes",
     tips: [
-      "Pollo y salmón van al horno al mismo tiempo (200°C, 20 min)",
-      "Lentejas en la olla mientras el horno trabaja",
-      "Batata y zucchini entran al horno junto al salmón",
-      "Dividís todo en 3 tuppers etiquetados con el día",
+      "Pollo + boniato en cubos en asadera A — 200°C, 25 min",
+      "Salmón + calabaza en cubos en asadera B — mismo horno, mismo tiempo",
+      "Lentejas + mezcla de verduras congeladas en la olla mientras el horno trabaja",
+      "Desmenuzás parte del pollo para las lentejas del lunes",
+      "Dividís todo en 3 tuppers etiquetados: Dom / Lun / Mar",
     ],
   },
   martes: {
@@ -99,10 +79,10 @@ const batchDays = {
     meals: [dinnersByDay.Miércoles, dinnersByDay.Jueves, dinnersByDay.Viernes],
     days: "Miércoles · Jueves · Viernes",
     tips: [
-      "Merluza al horno (200°C, 15 min) mientras cocinás la carne picada en sartén",
-      "Papa hervida en olla junto a la pasta",
-      "Wok de pollo: último, tarda 10 min, lo hacés en caliente",
-      "Dividís todo en 3 tuppers etiquetados con el día",
+      "Merluza + boniato en cubos en asadera — 200°C, 15 min",
+      "Carne picada en sartén + pasta en olla al mismo tiempo",
+      "Wok de pollo con zapallitos último — tarda 10 min",
+      "Dividís todo en 3 tuppers etiquetados: Mié / Jue / Vie",
     ],
   },
 };
@@ -119,20 +99,22 @@ const shoppingList = {
   "🏠 Siempre en casa": ["Aceite de oliva", "Sal y pimienta", "Ajo", "Salsa de soja", "Especias básicas"],
   "☕ Desayuno & Merienda": ["Café", "Leche descremada", "Pan integral / tostadas", "Yogur griego 0% (x8–10)", "Granola (poca)", "Queso crema light"],
   "🍎 Frutas": ["Bananas (x3)", "Manzanas (x4)", "Naranjas / mandarinas (x4)"],
-  "🥩 Proteínas": ["Pechuga de pollo (700g — para batch sáb + martes)", "Salmón fresco (200g)", "Merluza (250g)", "Carne picada 90% magra (200g)", "Atún al natural (x7 latas)", "Huevos (x14)"],
-  "🍚 Carbohidratos": ["Arroz (500g)", "Pasta integral (400g)", "Batata (x2)", "Papa (x3)", "Fideos de arroz (200g)"],
-  "🥦 Vegetales": ["Brócoli (x1)", "Espinaca", "Tomates (x6)", "Lechuga", "Cebolla morada", "Zanahoria (x3)", "Pimiento", "Zucchini (x2)", "Apio"],
-  "🫘 Legumbres": ["Lentejas (1 lata o 250g secas)"],
+  "🥩 Proteínas": ["Pechuga de pollo (700g)", "Salmón fresco (200g)", "Merluza (250g)", "Carne picada 90% magra (200g)", "Atún al natural (x7 latas)", "Huevos (x14)"],
+  "🍚 Carbohidratos": ["Arroz (500g)", "Pasta integral (400g)", "Fideos de arroz (200g)"],
+  "🥦 Verduras frescas": ["Brócoli congelado (1 bolsa)", "Mezcla congelada brócoli+coliflor+zanahoria (1 bolsa)", "Tomates (x6)", "Lechuga", "Cebolla morada", "Pimiento", "Espinaca"],
+  "🏠 Ya tenés en casa": ["Calabaza ✓", "Boniato ✓", "Zapallitos ✓", "Garbanzos en lata (reemplazan lentejas esta semana) ✓"],
+  "🫘 Legumbres": ["Lentejas (1 lata — para las siguientes semanas)"],
 };
 
 function ShoppingItem({ label }) {
   const [checked, setChecked] = useState(false);
+  const isOwned = label.includes("✓");
   return (
-    <div onClick={() => setChecked(c => !c)} style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer", opacity: checked ? 0.35 : 1, transition: "opacity 0.2s" }}>
-      <div style={{ width: "18px", height: "18px", borderRadius: "5px", flexShrink: 0, border: checked ? "none" : "1.5px solid #475569", background: checked ? "linear-gradient(135deg, #f97316, #e11d48)" : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {checked && <span style={{ color: "#fff", fontSize: "11px" }}>✓</span>}
+    <div onClick={() => !isOwned && setChecked(c => !c)} style={{ display: "flex", alignItems: "center", gap: "10px", cursor: isOwned ? "default" : "pointer", opacity: checked ? 0.35 : 1, transition: "opacity 0.2s" }}>
+      <div style={{ width: "18px", height: "18px", borderRadius: "5px", flexShrink: 0, border: isOwned ? "none" : checked ? "none" : "1.5px solid #475569", background: isOwned ? "#16a34a" : checked ? "linear-gradient(135deg, #f97316, #e11d48)" : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        {(checked || isOwned) && <span style={{ color: "#fff", fontSize: "11px" }}>✓</span>}
       </div>
-      <span style={{ fontSize: "14px", color: "#e2e8f0", fontFamily: "sans-serif", textDecoration: checked ? "line-through" : "none" }}>{label}</span>
+      <span style={{ fontSize: "14px", color: isOwned ? "#4ADE80" : "#e2e8f0", fontFamily: "sans-serif", textDecoration: checked ? "line-through" : "none" }}>{label}</span>
     </div>
   );
 }
@@ -169,8 +151,6 @@ function BatchView() {
             <div style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "3px", color: batch.color, fontFamily: "sans-serif", marginBottom: "4px" }}>{batch.label}</div>
             <div style={{ fontSize: "13px", color: "#64748b", fontFamily: "sans-serif" }}>Cocinás para: <strong style={{ color: "#f1f5f9" }}>{batch.days}</strong></div>
           </div>
-
-          {/* Meals to cook */}
           <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "12px" }}>
             {batch.meals.map((meal, i) => (
               <div key={i} style={{ background: "rgba(30,41,59,0.7)", border: "1px solid #334155", borderRadius: "12px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
@@ -183,8 +163,6 @@ function BatchView() {
               </div>
             ))}
           </div>
-
-          {/* Tips */}
           <div style={{ background: `${batch.color}10`, border: `1px solid ${batch.color}30`, borderRadius: "12px", padding: "14px 16px" }}>
             <div style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "2px", color: batch.color, fontFamily: "sans-serif", marginBottom: "10px" }}>⚡ Cómo organizarte</div>
             {batch.tips.map((tip, i) => (
@@ -196,12 +174,10 @@ function BatchView() {
           </div>
         </div>
       ))}
-
-      {/* Huevos note */}
       <div style={{ background: "rgba(30,41,59,0.6)", border: "1px solid #334155", borderRadius: "12px", padding: "14px 16px" }}>
         <div style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "2px", color: "#C084FC", fontFamily: "sans-serif", marginBottom: "8px" }}>🥚 Siempre el domingo</div>
         <div style={{ fontSize: "13px", color: "#94a3b8", fontFamily: "sans-serif", lineHeight: "1.6" }}>
-          Hervís <strong style={{ color: "#f1f5f9" }}>6–8 huevos duros</strong> de una vez — duran toda la semana en la heladera y cubren todos los snacks AM.
+          Hervís <strong style={{ color: "#f1f5f9" }}>6–8 huevos duros</strong> de una vez — duran toda la semana y cubren todos los snacks AM.
         </div>
       </div>
     </div>
@@ -215,13 +191,11 @@ export default function MealPlan() {
   const proteinPct = Math.round((current.protein * 4 / current.kcal) * 100);
   const carbsPct = Math.round((current.carbs * 4 / current.kcal) * 100);
   const fatPct = Math.round((current.fat * 9 / current.kcal) * 100);
-
   const isBatchDay = current.day === "Sábado" || current.day === "Martes";
   const batchInfo = current.day === "Sábado" ? batchDays.sábado : current.day === "Martes" ? batchDays.martes : null;
 
   return (
     <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)", fontFamily: "'Georgia', serif", padding: "24px 16px", color: "#f8fafc" }}>
-
       <div style={{ textAlign: "center", marginBottom: "24px" }}>
         <div style={{ fontSize: "11px", letterSpacing: "4px", color: "#94a3b8", textTransform: "uppercase", marginBottom: "6px" }}>Plan · Pérdida de grasa</div>
         <h1 style={{ fontSize: "26px", fontWeight: "normal", margin: 0, color: "#f1f5f9" }}>🍽️ Tu semana en piloto automático</h1>
@@ -235,7 +209,6 @@ export default function MealPlan() {
       </div>
 
       <div style={{ maxWidth: "600px", margin: "0 auto" }}>
-
         {view === "plan" && <>
           <div style={{ display: "flex", gap: "6px", marginBottom: "18px", flexWrap: "wrap", justifyContent: "center" }}>
             {plan.map((d, i) => {
@@ -270,22 +243,17 @@ export default function MealPlan() {
             </div>
           </div>
 
-          {/* Batch cooking banner on SAT/TUE */}
           {isBatchDay && batchInfo && (
             <div style={{ background: "rgba(249,115,22,0.1)", border: "1px solid rgba(249,115,22,0.3)", borderRadius: "12px", padding: "12px 16px", marginBottom: "14px" }}>
               <div style={{ fontSize: "13px", color: "#fb923c", fontFamily: "sans-serif", fontWeight: "bold", marginBottom: "4px" }}>🍳 Hoy es día de batch cooking</div>
-              <div style={{ fontSize: "13px", color: "#94a3b8", fontFamily: "sans-serif" }}>
-                Cocinás para {batchInfo.days}. Abrí la pestaña <strong style={{ color: "#f1f5f9" }}>Batch cooking</strong> para ver cómo organizarte.
-              </div>
+              <div style={{ fontSize: "13px", color: "#94a3b8", fontFamily: "sans-serif" }}>Cocinás para {batchInfo.days}. Abrí la pestaña <strong style={{ color: "#f1f5f9" }}>Batch cooking</strong> para ver cómo organizarte.</div>
             </div>
           )}
 
           {!isBatchDay && (
             <div style={{ background: "rgba(251,146,60,0.06)", border: "1px solid rgba(251,146,60,0.2)", borderRadius: "12px", padding: "10px 16px", marginBottom: "14px", display: "flex", alignItems: "center", gap: "10px" }}>
               <span style={{ fontSize: "16px" }}>♨️</span>
-              <span style={{ fontSize: "13px", color: "#94a3b8", fontFamily: "sans-serif" }}>
-                Hoy solo recalentás — la cena ya está lista en el tupper.
-              </span>
+              <span style={{ fontSize: "13px", color: "#94a3b8", fontFamily: "sans-serif" }}>Hoy solo recalentás — la cena ya está lista en el tupper.</span>
             </div>
           )}
 
@@ -316,7 +284,7 @@ export default function MealPlan() {
         {view === "shopping" && <>
           <div style={{ background: "rgba(30,41,59,0.6)", border: "1px solid #334155", borderRadius: "14px", padding: "14px 18px", marginBottom: "14px" }}>
             <p style={{ color: "#94a3b8", fontSize: "13px", fontFamily: "sans-serif", margin: 0 }}>
-              Comprá esto <strong style={{ color: "#f1f5f9" }}>una vez por semana</strong>. Batch cooking sábado y martes — el resto de los días solo recalentás.
+              Comprá esto <strong style={{ color: "#f1f5f9" }}>una vez por semana</strong>. Las verduras que ya tenés están marcadas en verde.
             </p>
           </div>
           {Object.entries(shoppingList).map(([category, items]) => (
@@ -328,7 +296,6 @@ export default function MealPlan() {
             </div>
           ))}
         </>}
-
       </div>
     </div>
   );
