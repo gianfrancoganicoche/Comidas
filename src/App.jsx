@@ -1,18 +1,24 @@
 import { useState } from "react";
 
+// COOK SCHEDULE:
+// Domingo  → bowl atún sin cocción            → cena dom + almuerzo lun
+// Martes   → pollo + carne (comprado lunes)   → cena mar + alm mié / cena mié + alm jue
+// Jueves   → salmón + merluza (comprado mié)  → cena jue + alm vie / cena vie + alm sáb
+// SHOPPING: Lunes (pollo+carne) · Martes (frutas+verduras) · Miércoles (pescado)
+
 const dinnersByDay = {
   Domingo:   { emoji: "🥗", name: "Bowl de atún con arroz y tomate", desc: "2 latas atún al natural (240g), 150g arroz cocido, tomate, cebolla morada, oliva, limón", kcal: 540, p: 54, c: 50, f: 10 },
   Lunes:     { emoji: "🍗", name: "Pollo al horno con boniato y brócoli", desc: "220g pechuga de pollo, 150g boniato en cubos, 200g brócoli congelado — asadera con oliva y sal, 200°C 25 min", kcal: 590, p: 52, c: 24, f: 12 },
   Martes:    { emoji: "🥩", name: "Carne picada con arroz y verduras", desc: "180g carne picada 90% magra, 150g arroz cocido, zanahoria, cebolla, tomate, ajo", kcal: 620, p: 48, c: 54, f: 16 },
   Miércoles: { emoji: "🐟", name: "Salmón al horno con calabaza", desc: "200g salmón, 200g calabaza en cubos — misma asadera, oliva y sal, 200°C 25 min", kcal: 620, p: 48, c: 30, f: 22 },
-  Jueves:    { emoji: "🍲", name: "Pollo con lentejas y verduras", desc: "120g pechuga pollo desmenuzada, 150g lentejas cocidas (1 lata), mezcla congelada brócoli+coliflor+zanahoria, ajo y oliva", kcal: 560, p: 52, c: 46, f: 8 },
-  Viernes:   { emoji: "🐟", name: "Merluza al horno con papa y ensalada", desc: "250g merluza, 150g papa hervida, lechuga, tomate, aceite de oliva y limón", kcal: 540, p: 52, c: 42, f: 10 },
-  Sábado:    { emoji: "🍽️", name: "Comida flexible", desc: "Tu elección — usá las proteínas que queden en casa o salí a comer. Meta: ~600 kcal, ~45g proteína", kcal: 600, p: 45, c: 50, f: 15, flexible: true },
+  Jueves:    { emoji: "🐟", name: "Merluza al horno con papa y ensalada", desc: "250g merluza, 150g papa hervida, lechuga, tomate, aceite de oliva y limón", kcal: 540, p: 52, c: 42, f: 10 },
+  Viernes:   { emoji: "🍲", name: "Pollo con lentejas y verduras", desc: "120g pechuga pollo desmenuzada, 150g lentejas cocidas (1 lata), mezcla congelada brócoli+coliflor+zanahoria, ajo y oliva", kcal: 560, p: 52, c: 46, f: 8 },
+  Sábado:    { emoji: "🍽️", name: "Comida flexible", desc: "Tu elección — usá lo que quede en casa o salí a comer. Meta: ~600 kcal, ~45g proteína", kcal: 600, p: 45, c: 50, f: 15, flexible: true },
 };
 
 const breakfasts = {
-  Lunes:     { emoji: "☕", name: "Café con leche + 2 huevos revueltos y tostada", desc: "250ml café con leche descremada, 2 huevos revueltos, 1 tostada integral", kcal: 420, p: 24, c: 26, f: 16 },
-  Martes:    { emoji: "🥛", name: "Yogur griego con granola y fruta", desc: "200g yogur griego natural, 25g granola, 1 banana o fruta a elección", kcal: 380, p: 22, c: 46, f: 6 },
+  Lunes:     { emoji: "☕", name: "Café con leche + huevos revueltos y tostada", desc: "250ml café con leche descremada, 2 huevos revueltos, 1 tostada integral", kcal: 420, p: 24, c: 26, f: 16 },
+  Martes:    { emoji: "🥛", name: "Yogur griego con granola y fruta", desc: "200g yogur griego natural, 25g granola, 1 fruta a elección", kcal: 380, p: 22, c: 46, f: 6 },
   Miércoles: { emoji: "☕", name: "Café con leche + huevo a la plancha y tostada", desc: "250ml café con leche descremada, 2 huevos a la plancha, 1 tostada integral", kcal: 400, p: 22, c: 24, f: 16 },
   Jueves:    { emoji: "🥛", name: "Yogur griego con tostada y fruta", desc: "200g yogur griego, 1 tostada integral con queso crema light, 1 fruta", kcal: 370, p: 22, c: 36, f: 8 },
   Viernes:   { emoji: "☕", name: "Café con leche + yogur griego", desc: "250ml café con leche descremada, 150g yogur griego natural", kcal: 330, p: 20, c: 22, f: 6 },
@@ -32,12 +38,12 @@ const morningSnacks = {
 
 const afternoonSnacks = {
   Lunes:     { emoji: "🐟", name: "Tostada con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
-  Martes:    { emoji: "🐟", name: "Tostada con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
-  Miércoles: { emoji: "🥚", name: "2 huevos duros + yogur griego", desc: "2 huevos duros + 150g yogur griego natural", kcal: 270, p: 28, c: 8, f: 14 },
-  Jueves:    { emoji: "🐟", name: "Tostada con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
-  Viernes:   { emoji: "🥚", name: "2 huevos duros + yogur griego", desc: "2 huevos duros + 150g yogur griego natural", kcal: 270, p: 28, c: 8, f: 14 },
-  Sábado:    { emoji: "🐟", name: "Tostada con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
-  Domingo:   { emoji: "🥚", name: "2 huevos duros + tostada con queso crema", desc: "2 huevos duros + 1 tostada integral + queso crema light", kcal: 260, p: 22, c: 16, f: 12 },
+  Martes:    { emoji: "🥚", name: "2 huevos duros + yogur griego", desc: "2 huevos duros + 150g yogur griego natural", kcal: 270, p: 28, c: 8, f: 14 },
+  Miércoles: { emoji: "🐟", name: "Tostada con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
+  Jueves:    { emoji: "🥚", name: "2 huevos duros + yogur griego", desc: "2 huevos duros + 150g yogur griego natural", kcal: 270, p: 28, c: 8, f: 14 },
+  Viernes:   { emoji: "🐟", name: "Tostada con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
+  Sábado:    { emoji: "🥚", name: "2 huevos duros + yogur griego", desc: "2 huevos duros + 150g yogur griego natural", kcal: 270, p: 28, c: 8, f: 14 },
+  Domingo:   { emoji: "🐟", name: "Tostada con atún + queso crema", desc: "1 lata atún al natural + 1 tostada integral + queso crema light", kcal: 260, p: 30, c: 14, f: 8 },
 };
 
 const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
@@ -61,58 +67,67 @@ const plan = dayNames.map(day => {
 
 const cookDays = {
   Domingo: {
-    label: "Cocina · Domingo", color: "#f97316", forDays: "Lunes · Martes",
+    label: "Cocina · Domingo", color: "#4ADE80", forDays: "Lunes",
+    note: "Sin cocción — solo armás el bowl",
+    meals: [dinnersByDay.Domingo],
+    shopping: "🛒 Atún en lata — siempre en casa",
+    tips: [
+      "Cocinás el arroz (10 min) y armás el bowl en el momento",
+      "Doble porción: 1 para cenar, 1 tupper para el almuerzo del lunes",
+      "1 tupper etiquetado: Lun almuerzo",
+      "Aprovechá y hervís 6–8 huevos duros para la semana",
+    ],
+  },
+  Martes: {
+    label: "Cocina · Martes", color: "#f97316", forDays: "Miércoles · Jueves",
     meals: [dinnersByDay.Lunes, dinnersByDay.Martes],
     shopping: "🛒 Compraste el lunes: pollo + carne picada",
     tips: [
       "Pollo + boniato en asadera — 200°C, 25 min",
       "Brócoli congelado entra los últimos 15 min",
-      "Carne picada en sartén + arroz en olla al mismo tiempo",
-      "2 tuppers etiquetados: Lun / Mar",
-      "Hervís 6 huevos duros para la semana",
-    ],
-  },
-  Martes: {
-    label: "Cocina · Martes", color: "#60A5FA", forDays: "Miércoles",
-    meals: [dinnersByDay.Miércoles],
-    shopping: "🛒 Compraste hoy: salmón + pasta fresca",
-    tips: [
-      "Salmón + calabaza en asadera — 200°C, 25 min",
-      "Doble porción: 1 para cenar, 1 tupper para mañana",
-      "1 tupper etiquetado: Mié almuerzo",
+      "Carne picada en sartén + arroz en olla — al mismo tiempo",
+      "4 tuppers etiquetados: Mié alm / Mié cena / Jue alm / (cena mar es fresca)",
     ],
   },
   Jueves: {
-    label: "Cocina · Jueves", color: "#C084FC", forDays: "Viernes · Sábado",
-    meals: [dinnersByDay.Viernes],
-    shopping: "🛒 Compraste el miércoles: merluza",
+    label: "Cocina · Jueves", color: "#60A5FA", forDays: "Viernes · Sábado",
+    meals: [dinnersByDay.Miércoles, dinnersByDay.Jueves],
+    shopping: "🛒 Compraste el miércoles: salmón + merluza",
     tips: [
-      "Merluza + papa en asadera — 200°C, 20 min",
-      "Doble porción: 1 para cenar, 1 tupper para el viernes",
-      "Sábado es flexible — no cocinás nada fijo",
+      "Salmón + calabaza en asadera A — 200°C, 25 min",
+      "Merluza + papa en asadera B — 200°C, 20 min (mismo horno)",
+      "4 tuppers: Vie alm / Vie cena / Sáb alm / (cena jue es fresca)",
     ],
   },
 };
 
 const shoppingDays = [
-  { day: "Lunes", discount: "Pollo y carne", color: "#f97316", items: ["Pechuga de pollo (600g)", "Carne picada 90% magra (400g)"] },
-  { day: "Martes", discount: "Frutas y verduras", color: "#4ADE80", items: ["Bananas (x5)", "Manzanas o fruta a elección (x4)", "Naranjas / mandarinas (x3)", "Brócoli congelado (x2 bolsas)", "Mezcla congelada brócoli+coliflor+zanahoria (x1)", "Boniato (x2)", "Calabaza (ya tenés)", "Tomates (x6)", "Lechuga", "Cebolla morada", "Zanahoria (x3)", "Papa (x3)"] },
-  { day: "Miércoles", discount: "Pescados y pasta", color: "#60A5FA", items: ["Salmón fresco (400g)", "Merluza (500g)", "Pasta fresca (opcional)"] },
-  { day: "Siempre en casa", discount: "Sin descuento específico", color: "#94a3b8", items: ["Atún al natural (x8 latas)", "Huevos (x14)", "Yogur griego 0% (x10)", "Granola", "Pan integral / tostadas", "Queso crema light", "Mantequilla de maní", "Arroz (500g)", "Lentejas en lata (x2)", "Aceite de oliva", "Café", "Leche descremada"] },
+  {
+    day: "Lunes", discount: "Pollo y carne", color: "#f97316",
+    items: ["Pechuga de pollo (600g)", "Carne picada 90% magra (400g)"],
+  },
+  {
+    day: "Martes", discount: "Frutas y verduras", color: "#4ADE80",
+    items: ["Bananas (x5)", "Manzanas o fruta a elección (x4)", "Naranjas / mandarinas (x3)", "Brócoli congelado (x2 bolsas)", "Mezcla congelada brócoli+coliflor+zanahoria (x1)", "Boniato (x2)", "Calabaza (ya tenés)", "Tomates (x6)", "Lechuga", "Cebolla morada", "Zanahoria (x3)", "Papa (x3)"],
+  },
+  {
+    day: "Miércoles", discount: "Pescados y pasta", color: "#60A5FA",
+    items: ["Salmón fresco (400g)", "Merluza (500g)", "Pasta fresca (opcional)"],
+  },
+  {
+    day: "Siempre en casa", discount: "Sin descuento específico", color: "#94a3b8",
+    items: ["Atún al natural (x8 latas)", "Huevos (x14)", "Yogur griego 0% (x10)", "Granola", "Pan integral / tostadas", "Queso crema light", "Mantequilla de maní", "Arroz (500g)", "Lentejas en lata (x2)", "Aceite de oliva", "Café", "Leche descremada"],
+  },
 ];
 
 const typeColors = { "Desayuno": "#FB923C", "Snack AM": "#4ADE80", "Almuerzo": "#60A5FA", "Merienda": "#C084FC", "Cena": "#FB7185" };
-const isCookDay = d => ["Domingo", "Martes", "Jueves"].includes(d);
+const COOK_DAYS = ["Domingo", "Martes", "Jueves"];
 
-// ── Accordion ────────────────────────────────────────────────────────────────
 function Accordion({ title, subtitle, color, defaultOpen = false, children }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div style={{ marginBottom: "10px", borderRadius: "14px", overflow: "hidden", border: `1px solid ${color ? color + "40" : "#334155"}` }}>
-      <div
-        onClick={() => setOpen(o => !o)}
-        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", background: "rgba(30,41,59,0.9)", cursor: "pointer", userSelect: "none" }}
-      >
+      <div onClick={() => setOpen(o => !o)} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", background: "rgba(30,41,59,0.9)", cursor: "pointer", userSelect: "none" }}>
         <div>
           <div style={{ fontSize: "15px", color: "#f1f5f9", fontWeight: "bold" }}>{title}</div>
           {subtitle && <div style={{ fontSize: "12px", color: "#64748b", fontFamily: "sans-serif", marginTop: "2px" }}>{subtitle}</div>}
@@ -161,12 +176,12 @@ function MealRow({ type, meal }) {
   );
 }
 
-// ── Sections ─────────────────────────────────────────────────────────────────
 function PlanSection() {
   return (
     <div>
-      {plan.map((d) => {
-        const cook = isCookDay(d.day);
+      {plan.map(d => {
+        const cook = COOK_DAYS.includes(d.day);
+        const cookColor = d.day === "Domingo" ? "#4ADE80" : d.day === "Martes" ? "#f97316" : "#60A5FA";
         const proteinPct = Math.round((d.protein * 4 / d.kcal) * 100);
         const carbsPct = Math.round((d.carbs * 4 / d.kcal) * 100);
         const fatPct = Math.round((d.fat * 9 / d.kcal) * 100);
@@ -175,9 +190,8 @@ function PlanSection() {
             key={d.day}
             title={`${cook ? "🍳 " : ""}${d.day}`}
             subtitle={`${d.kcal} kcal · ${d.protein}g proteína${cook ? " · día de cocina" : ""}`}
-            color={cook ? "#f97316" : null}
+            color={cook ? cookColor : null}
           >
-            {/* Macro bars */}
             <div style={{ display: "flex", gap: "8px", marginBottom: "14px" }}>
               {[
                 { label: "Proteína", val: d.protein, pct: proteinPct, color: "#4ADE80" },
@@ -193,12 +207,11 @@ function PlanSection() {
                 </div>
               ))}
             </div>
-            {cook && (
-              <div style={{ background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.2)", borderRadius: "8px", padding: "9px 12px", marginBottom: "12px" }}>
-                <span style={{ fontSize: "12px", color: "#fb923c", fontFamily: "sans-serif" }}>🍳 Hoy cocinás para <strong>{cookDays[d.day]?.forDays}</strong> — ver pestaña Cocina</span>
+            {cook ? (
+              <div style={{ background: `${cookColor}15`, border: `1px solid ${cookColor}30`, borderRadius: "8px", padding: "9px 12px", marginBottom: "12px" }}>
+                <span style={{ fontSize: "12px", color: cookColor, fontFamily: "sans-serif" }}>🍳 Hoy cocinás para <strong>{cookDays[d.day]?.forDays}</strong> — ver pestaña Cocina</span>
               </div>
-            )}
-            {!cook && (
+            ) : (
               <div style={{ background: "rgba(30,41,59,0.4)", border: "1px solid #1e293b", borderRadius: "8px", padding: "9px 12px", marginBottom: "12px" }}>
                 <span style={{ fontSize: "12px", color: "#64748b", fontFamily: "sans-serif" }}>♨️ Hoy solo recalentás — la cena ya está en el tupper</span>
               </div>
@@ -219,8 +232,11 @@ function CookSection() {
   return (
     <div>
       {Object.entries(cookDays).map(([day, cook]) => (
-        <Accordion key={day} title={cook.label} subtitle={`Para: ${cook.forDays}`} color={cook.color} defaultOpen={false}>
+        <Accordion key={day} title={cook.label} subtitle={`Para: ${cook.forDays}`} color={cook.color}>
           <div style={{ fontSize: "12px", color: cook.color, fontFamily: "sans-serif", marginBottom: "12px", opacity: 0.9 }}>{cook.shopping}</div>
+          {cook.note && (
+            <div style={{ fontSize: "12px", color: "#64748b", fontFamily: "sans-serif", marginBottom: "12px", fontStyle: "italic" }}>{cook.note}</div>
+          )}
           {cook.meals.map((meal, i) => (
             <div key={i} style={{ background: "rgba(30,41,59,0.5)", borderRadius: "10px", padding: "10px 14px", marginBottom: "8px", display: "flex", alignItems: "center", gap: "10px" }}>
               <span style={{ fontSize: "20px" }}>{meal.emoji}</span>
@@ -242,10 +258,6 @@ function CookSection() {
           </div>
         </Accordion>
       ))}
-      <div style={{ background: "rgba(30,41,59,0.6)", border: "1px solid #334155", borderRadius: "12px", padding: "14px 16px", marginTop: "4px" }}>
-        <div style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "2px", color: "#C084FC", fontFamily: "sans-serif", marginBottom: "6px" }}>🥚 Siempre el domingo</div>
-        <div style={{ fontSize: "13px", color: "#94a3b8", fontFamily: "sans-serif" }}>Hervís <strong style={{ color: "#f1f5f9" }}>6–8 huevos duros</strong> — duran toda la semana, cubren todos los snacks AM.</div>
-      </div>
     </div>
   );
 }
@@ -267,16 +279,8 @@ function ShoppingSection() {
   );
 }
 
-// ── Main ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [section, setSection] = useState("plan");
-
-  const sections = [
-    { id: "plan", label: "📅 Plan" },
-    { id: "cook", label: "🍳 Cocina" },
-    { id: "shopping", label: "🛒 Compras" },
-  ];
-
   return (
     <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)", fontFamily: "'Georgia', serif", padding: "24px 16px", color: "#f8fafc" }}>
       <div style={{ textAlign: "center", marginBottom: "24px" }}>
@@ -284,14 +288,11 @@ export default function App() {
         <h1 style={{ fontSize: "24px", fontWeight: "normal", margin: 0, color: "#f1f5f9" }}>🍽️ Tu semana en piloto automático</h1>
         <p style={{ color: "#64748b", fontSize: "13px", marginTop: "6px" }}>~2.100 kcal · ~180g proteína · Tienda Inglesa</p>
       </div>
-
-      {/* Section tabs as accordions trigger */}
       <div style={{ display: "flex", justifyContent: "center", gap: "6px", marginBottom: "20px", flexWrap: "wrap" }}>
-        {sections.map(s => (
-          <button key={s.id} onClick={() => setSection(s.id)} style={{ padding: "8px 18px", borderRadius: "999px", border: section === s.id ? "none" : "1px solid #334155", background: section === s.id ? "linear-gradient(135deg, #f97316, #e11d48)" : "rgba(30,41,59,0.8)", color: section === s.id ? "#fff" : "#94a3b8", fontFamily: "inherit", fontSize: "13px", cursor: "pointer", fontWeight: section === s.id ? "bold" : "normal" }}>{s.label}</button>
+        {[["plan","📅 Plan"],["cook","🍳 Cocina"],["shopping","🛒 Compras"]].map(([id, label]) => (
+          <button key={id} onClick={() => setSection(id)} style={{ padding: "8px 18px", borderRadius: "999px", border: section === id ? "none" : "1px solid #334155", background: section === id ? "linear-gradient(135deg, #f97316, #e11d48)" : "rgba(30,41,59,0.8)", color: section === id ? "#fff" : "#94a3b8", fontFamily: "inherit", fontSize: "13px", cursor: "pointer", fontWeight: section === id ? "bold" : "normal" }}>{label}</button>
         ))}
       </div>
-
       <div style={{ maxWidth: "600px", margin: "0 auto" }}>
         {section === "plan" && <PlanSection />}
         {section === "cook" && <CookSection />}
