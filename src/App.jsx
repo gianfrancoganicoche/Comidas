@@ -23,13 +23,13 @@ const dinnersByDay = {
 };
 
 const breakfasts = {
-  Lunes:     { emoji: "☕", name: "Café con leche + huevos revueltos y tostada", desc: "250ml café con leche descremada, 2 huevos revueltos, 1 tostada integral", kcal: 420, p: 24, c: 26, f: 16 },
+  Lunes:     { emoji: "🥛", name: "Yogur griego con granola y fruta", desc: "200g yogur griego natural, 25g granola, 1 fruta a elección", kcal: 380, p: 22, c: 46, f: 6 },
   Martes:    { emoji: "🥛", name: "Yogur griego con granola y fruta", desc: "200g yogur griego natural, 25g granola, 1 fruta a elección", kcal: 380, p: 22, c: 46, f: 6 },
-  Miércoles: { emoji: "☕", name: "Café con leche + huevo a la plancha y tostada", desc: "250ml café con leche descremada, 2 huevos a la plancha, 1 tostada integral", kcal: 400, p: 22, c: 24, f: 16 },
-  Jueves:    { emoji: "🥛", name: "Yogur griego con tostada y fruta", desc: "200g yogur griego, 1 tostada integral con queso crema light, 1 fruta", kcal: 370, p: 22, c: 36, f: 8 },
-  Viernes:   { emoji: "☕", name: "Café con leche + yogur griego", desc: "250ml café con leche descremada, 150g yogur griego natural", kcal: 330, p: 20, c: 22, f: 6 },
-  Sábado:    { emoji: "🥛", name: "Yogur griego con granola y fruta", desc: "200g yogur griego, 25g granola, 1 fruta a elección", kcal: 380, p: 22, c: 46, f: 6 },
-  Domingo:   { emoji: "☕", name: "Café con leche + tostadas con mantequilla de maní", desc: "250ml café con leche descremada, 2 tostadas integrales con mantequilla de maní", kcal: 420, p: 20, c: 36, f: 16 },
+  Miércoles: { emoji: "☕", name: "Café con leche + huevos y tostadas", desc: "250ml café con leche descremada, 2 huevos revueltos, 2 tostadas integrales", kcal: 450, p: 26, c: 30, f: 16 },
+  Jueves:    { emoji: "🥛", name: "Yogur griego con granola y fruta", desc: "200g yogur griego natural, 25g granola, 1 fruta a elección", kcal: 380, p: 22, c: 46, f: 6 },
+  Viernes:   { emoji: "☕", name: "Café con leche + huevos y tostadas", desc: "250ml café con leche descremada, 2 huevos revueltos, 2 tostadas integrales", kcal: 450, p: 26, c: 30, f: 16 },
+  Sábado:    { emoji: "☕", name: "Café con leche + huevos y tostadas", desc: "250ml café con leche descremada, 2 huevos a la plancha, 2 tostadas integrales", kcal: 450, p: 26, c: 30, f: 16 },
+  Domingo:   { emoji: "☕", name: "Café con leche + huevos y tostadas", desc: "250ml café con leche descremada, 2 huevos a la plancha, 2 tostadas integrales", kcal: 450, p: 26, c: 30, f: 16 },
 };
 
 const morningSnacks = {
@@ -43,13 +43,13 @@ const morningSnacks = {
 };
 
 const afternoonSnacks = {
-  Lunes:     { emoji: "🐟", name: "Tostada con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
-  Martes:    { emoji: "🥚", name: "2 huevos duros + yogur griego", desc: "2 huevos duros + 150g yogur griego natural", kcal: 270, p: 28, c: 8, f: 14 },
-  Miércoles: { emoji: "🐟", name: "Tostada con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
-  Jueves:    { emoji: "🥚", name: "2 huevos duros + yogur griego", desc: "2 huevos duros + 150g yogur griego natural", kcal: 270, p: 28, c: 8, f: 14 },
-  Viernes:   { emoji: "🐟", name: "Tostada con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
-  Sábado:    { emoji: "🥚", name: "2 huevos duros + yogur griego", desc: "2 huevos duros + 150g yogur griego natural", kcal: 270, p: 28, c: 8, f: 14 },
-  Domingo:   { emoji: "🐟", name: "Tostada con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
+  Lunes:     { emoji: "🐟", name: "Tostadas con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
+  Martes:    { emoji: "☕", name: "Café con leche + 2 huevos + tostadas", desc: "250ml café con leche descremada, 2 huevos duros, 1 tostada integral", kcal: 340, p: 28, c: 20, f: 16 },
+  Miércoles: { emoji: "🐟", name: "Tostadas con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
+  Jueves:    { emoji: "🐟", name: "Tostadas con atún + yogur griego", desc: "1 lata atún al natural + 1 tostada integral + 150g yogur griego", kcal: 310, p: 42, c: 18, f: 5 },
+  Viernes:   { emoji: "☕", name: "Café con leche + 2 huevos + tostadas", desc: "250ml café con leche descremada, 2 huevos duros, 1 tostada integral", kcal: 340, p: 28, c: 20, f: 16 },
+  Sábado:    { emoji: "🥛", name: "Yogur griego con granola y fruta", desc: "200g yogur griego natural, 25g granola, 1 fruta a elección", kcal: 380, p: 22, c: 46, f: 6 },
+  Domingo:   { emoji: "🥛", name: "Yogur griego con granola y fruta", desc: "200g yogur griego natural, 25g granola, 1 fruta a elección", kcal: 380, p: 22, c: 46, f: 6 },
 };
 
 const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
